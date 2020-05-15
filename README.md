@@ -1,5 +1,9 @@
 # React Photobooth & Avatar Generator
 
+<p align="center">
+  <img width="50%" src="https://media.giphy.com/media/l0HlDwtycArz4uxby/giphy.gif" />
+</p>
+
 A simple boilerplate React application using Cloudinary and Outfit to allow you to create your own virtual photobooths. More to come.
 
 ## Getting Started
