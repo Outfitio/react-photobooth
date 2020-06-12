@@ -1,22 +1,29 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 import Preview from "./preview.js";
 import { useAppState } from "../providers/appState";
-import GeneratingTag from "./generatingTag";
+import Spinner from "../components/spinner";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faFacebookF,
+  faInstagram,
+  faTwitter,
+} from "@fortawesome/free-brands-svg-icons";
+import { FacebookProvider, Share } from "react-facebook";
 
 const Row = styled.div`
   width: 100%;
-  display: ${(props) => (props.isMobile ? "flex" : "none")};
+  display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   filter: ${(props) => (props.imageUrl ? "blur(0)" : "blur(5px)")};
-  transition: cubic-bezier(0.68, 0.03, 0.86, 0.96) filter 0.8s;
+  visibility: ${(props) => (props.imageUrl ? "visible" : "hidden")};
+  transition: cubic-bezier(0.68, 0.03, 0.86, 0.96) all 0.8s;
 
   @media (min-width: 900px) {
     flex-direction: row;
-    display: ${(props) => (props.isMobile ? "none" : "flex")};
   }
 `;
 
@@ -48,59 +55,36 @@ const Col = styled.div`
   }
 `;
 
-const PreviewWrapper = styled.div`
-  a {
-    display: block;
-    opacity: 1;
-    transition: 0.2s cubic-bezier(0.42, 0, 0.88, 0.84) opacity;
-    font-size: 1rem;
-    align-self: center;
+const PreviewWrapper = styled.div``;
 
-    @media (min-width: 900px) {
-      font-size: 1.5rem;
-      display: ${(props) => (props.isDisabled ? "block" : "none")};
-      opacity: ${(props) => (props.isDisabled ? "1" : "0")};
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      box-shadow: 0px 2px 2px 2px rgba(0, 0, 0, 0.5);
-    }
-  }
-
-  div {
-    transition: 0.2s cubic-bezier(0.42, 0, 0.88, 0.84) all;
-    transform: scale(1);
-  }
-
-  &:hover div {
-    transform: scale(1.025);
-  }
-
-  &:hover a {
-    display: block;
-    opacity: 1;
-  }
-`;
-
-const TextContainer = styled.div`
+const ButtonContainer = styled.div`
   display: flex;
-  flex-direction: row !important;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
 `;
 
-const DownloadButton = styled.a`
-  display: block;
+const ShareButton = styled.a`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   pointer-events: ${(props) => (props.isDisabled ? "none" : "all")};
-  padding: 0.6rem 1.2rem;
-  border-radius: 0.3em;
-  background-color: #326295;
+  font-size: 1.8rem;
+  width: 4rem;
+  height: 4rem;
+  text-align: center;
+  border-radius: 0;
+  background-color: #212121;
   border: none;
   color: white;
   box-shadow: none;
   font-family: "IBM Plex Sans", sans-serif;
   text-decoration: none;
   cursor: pointer;
+  margin: 0 1rem;
+
+  &:hover {
+    background-color: #151515;
+  }
 `;
 
 const SwitchContainer = styled.div`
@@ -156,75 +140,50 @@ export default function PreviewContainer({ imagePosition }) {
         <Col>
           <PreviewWrapper isDisabled={isGenerating ? true : false}>
             <Preview
-              size="square"
-              imageUrl={imageUrl && imagePosition("square", imageUrl)}
-            />
-            {generatedAvatar && (
-              <DownloadButton target="_blank" href={generatedAvatar.square}>
-                Download
-              </DownloadButton>
-            )}
-          </PreviewWrapper>
-          <TextContainer>
-            <p>Instagram</p>
-            {imageUrl && <GeneratingTag />}
-          </TextContainer>
-        </Col>
-        <Col>
-          <PreviewWrapper isDisabled={isGenerating ? true : false}>
-            <Preview
-              size="rect"
-              imageUrl={imageUrl && imagePosition("rect", imageUrl)}
-            />
-            {generatedAvatar && (
-              <DownloadButton target="_blank" href={generatedAvatar.rect}>
-                Download
-              </DownloadButton>
-            )}
-          </PreviewWrapper>
-          <TextContainer>
-            <p>Facebook, Linkedin, Twitter</p>
-            {imageUrl && <GeneratingTag />}
-          </TextContainer>
-        </Col>
-      </Row>
-      <Row isMobile imageUrl={imageUrl}>
-        <Col>
-          <PreviewWrapper isDisabled={isGenerating ? true : false}>
-            <p>
-              {previewSize === "square"
-                ? "Instagram"
-                : "Facebook, Linkedin, Twitter"}
-            </p>
-
-            <Preview
               size={previewSize}
               imageUrl={imageUrl && imagePosition(previewSize, imageUrl)}
             />
-            <DownloadButton
-              component="a"
-              target="_blank"
-              href={generatedAvatar && generatedAvatar[previewSize]}
-              isDisabled={isGenerating ? true : false}>
-              {isGenerating ? "Generating..." : "Download"}
-            </DownloadButton>
+
+            <ButtonContainer>
+              <FacebookProvider appId="213609442945784">
+                <Share href="http://www.facebook.com">
+                  {({ handleClick, loading }) => (
+                    <ShareButton
+                      disabled={loading}
+                      onClick={handleClick}
+                      isDisabled={isGenerating ? true : false}>
+                      {isGenerating ? (
+                        <Spinner small />
+                      ) : (
+                        <FontAwesomeIcon icon={faFacebookF} />
+                      )}
+                    </ShareButton>
+                  )}
+                </Share>
+              </FacebookProvider>
+
+              <ShareButton
+                target="_blank"
+                href={generatedAvatar && generatedAvatar[previewSize]}
+                isDisabled={isGenerating ? true : false}>
+                {isGenerating ? (
+                  <Spinner small />
+                ) : (
+                  <FontAwesomeIcon icon={faTwitter} />
+                )}
+              </ShareButton>
+              <ShareButton
+                target="_blank"
+                href={generatedAvatar && generatedAvatar[previewSize]}
+                isDisabled={isGenerating ? true : false}>
+                {isGenerating ? (
+                  <Spinner small />
+                ) : (
+                  <FontAwesomeIcon icon={faInstagram} />
+                )}
+              </ShareButton>
+            </ButtonContainer>
           </PreviewWrapper>
-          <SwitchContainer>
-            <Switch
-              isActive={previewSize}
-              size="square"
-              onClick={function () {
-                changePreview("square");
-              }}
-            />
-            <Switch
-              isActive={previewSize}
-              size="rect"
-              onClick={function () {
-                changePreview("rect");
-              }}
-            />
-          </SwitchContainer>
         </Col>
       </Row>
     </Fragment>

@@ -30,7 +30,7 @@ const Square = styled.div`
   }
 
   & > div:first-child {
-    filter: brightness(1.15) contrast(0.9);
+    filter: brightness(1.1) saturate(0) contrast(1.1);
   }
 `;
 
@@ -50,7 +50,7 @@ const Rect = styled.div`
   }
 
   & > div:first-child {
-    filter: brightness(1.1);
+    filter: brightness(1.1) saturate(0);
   }
 `;
 

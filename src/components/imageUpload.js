@@ -25,7 +25,7 @@ const Uploader = styled.div`
     font-weight: 500;
     padding: 0.4em 1em;
     color: #fff;
-    background-color: ${(props) => (props.disabled ? "#BB003A" : "#E40046")};
+    background-color: ${(props) => (props.disabled ? "#7D7D7D" : "#212121")};
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     display: inline-block;
     border-radius: 0.33rem;
@@ -64,9 +64,13 @@ const Uploader = styled.div`
     }
 
     &:hover {
-      background-color: ${(props) => (props.disabled ? "#E40046" : "#BB003A")};
+      background-color: ${(props) => (props.disabled ? "#212121" : "#7D7D7D")};
       color: #fff;
-      border: 1px solid ${(props) => (props.disabled ? "#E40046" : "#BB003A")};
+      border: 1px solid ${(props) => (props.disabled ? "#212121" : "#7D7D7D")};
+    }
+
+    &:focus {
+      background-color: #151515;
     }
   }
 `;

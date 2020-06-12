@@ -11,8 +11,8 @@ export function AppStateProvider({ children }) {
   const [previewSize, setSize] = useState("square");
 
   // Enter your UploadPreset and CloudName here to enable uploading to your cloudinary bucket.
-  const cloudinaryUploadPreset = "";
-  const cloudinaryCloudName = "";
+  const cloudinaryUploadPreset = "uncm2kav";
+  const cloudinaryCloudName = "outfitio";
 
   const value = {
     imageUrl,

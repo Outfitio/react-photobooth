@@ -7,12 +7,17 @@ import styled from "styled-components";
 import PhotosUploader from "./components/imageUpload";
 import PreviewContainer from "./components/previewContainer";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUndoAlt } from "@fortawesome/free-solid-svg-icons";
+
 const Container = styled.div`
   font-family: "IBM Plex Sans", sans-serif;
   width: 100vw;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  background-color: #000;
+  color: #fff;
 `;
 
 const InnerContainer = styled.div`
@@ -24,31 +29,25 @@ const InnerContainer = styled.div`
 `;
 
 const Wrapper = styled.div`
-  background-color: #d8dbdb;
   width: 100%;
-  padding: 2rem 3rem 2rem 3rem;
+  padding: 4rem 24rem;
   position: relative;
   overflow: hidden;
-  border-radius: 0;
   height: 90vh;
   display: flex;
 
   @media (min-width: 500px) {
-    padding: 2rem 8rem 2rem 8rem;
+    padding: 2rem 8rem;
   }
 
   @media (min-width: 700px) {
-    padding: 2rem 13rem 2rem 13rem;
+    padding: 2rem 13rem;
     height: 75vh;
   }
 
   @media (min-width: 900px) {
-    padding: 2rem;
+    padding: 4rem 24rem;
     height: auto;
-  }
-
-  @media (min-width: 1200px) {
-    padding: 2rem;
   }
 `;
 
@@ -61,30 +60,27 @@ const OverlaySection = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: ${(props) =>
-    props.imageUrl ? "transparent" : "rgba(210, 210, 210, 0.8)"};
+  background-color: transparent;
   z-index: 1;
   pointer-events: ${(props) => (props.imageUrl ? "none" : "all")};
 `;
 
 const Header = styled.header`
-  margin-bottom: 1.5rem;
-  margin-left: 1.5rem;
-  margin-top: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1.5rem;
 
   h1 {
     font-size: 2rem;
     font-weight: 700;
+    text-transform: uppercase;
   }
 `;
 
 const StartAgainButton = styled.button`
   font-size: 1rem;
   justify-content: center;
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin: 1rem;
   padding: 0.6rem 1.2rem;
   border-radius: 0.3em;
   background-color: #989898;
@@ -97,12 +93,6 @@ const StartAgainButton = styled.button`
   &:focus {
     outline: none;
     box-shadow: none;
-  }
-
-  @media (min-width: 900px) {
-    margin: 2rem;
-    top: 0;
-    bottom: initial;
   }
 `;
 
@@ -204,24 +194,24 @@ function App() {
       <Container>
         <InnerContainer>
           <Header>
-            <h1>React Photobooth</h1>
-          </Header>
-
-          <Wrapper>
-            <OverlaySection imageUrl={imageUrl}>
-              <PhotosUploader label="Upload your Photo" />
-            </OverlaySection>
-
-            <PreviewContainer imagePosition={imagePosition} />
+            <h1>We the People</h1>
 
             {imageUrl && (
               <StartAgainButton
                 onClick={function () {
                   startAgain();
                 }}>
-                Try Again
+                <FontAwesomeIcon icon={faUndoAlt} />
               </StartAgainButton>
             )}
+          </Header>
+
+          <Wrapper>
+            <OverlaySection imageUrl={imageUrl}>
+              <PhotosUploader label="Upload your Image" />
+            </OverlaySection>
+
+            <PreviewContainer imagePosition={imagePosition} />
           </Wrapper>
         </InnerContainer>
       </Container>
