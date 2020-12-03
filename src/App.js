@@ -113,6 +113,8 @@ function App() {
     setProgress,
     setIsGenerating,
     setGeneratedAvatars,
+    makeAPIKey,
+    makeTemplateURL,
   } = useAppState();
 
   const imagePosition = (size, url) => {
@@ -142,50 +144,63 @@ function App() {
       const generateAvatar = () => {
         setIsGenerating(true);
 
-        const reqUrl =
-          "https://6bf0aic5kj.execute-api.ap-southeast-2.amazonaws.com/anh/dynamic-exports";
+        const reqUrl = `${makeTemplateURL}`;
+
+        const headers = {
+          'Content-Type': 'application/json',
+          'X-MAKE-API-KEY': `${makeAPIKey}`
+        }
 
         const rectData = {
-          width: 1320,
-          height: 691,
-          fileType: "png",
-          unit: "px",
-          templateId: "redhat",
-          downloadName: isMobile ? "" : "rectangle-summit-photobooth-by-outfit",
-          templateProps: {
-            avatar: imagePosition("rect", imageUrl),
+          customSize: {
+            width: 1320,
+            height: 691,
+            unit: "px"
           },
+          format: "png",
+          fileName: "rectangle",
+          contentDisposition: isMobile ? "inline" : "attachment",
+          data: {
+            avatar: imagePosition("rect", imageUrl),
+          }
         };
 
         const squareData = {
-          width: 1200,
-          height: 1200,
-          fileType: "png",
-          unit: "px",
-          templateId: "redhat",
-          downloadName: isMobile ? "" : "square-summit-photobooth-by-outfit",
-          templateProps: {
-            avatar: imagePosition("square", imageUrl),
+          customSize: {
+            width: 1200,
+            height: 1200,
+            unit: "px"
           },
+          format: "png",
+          fileName: "square",
+          contentDisposition: isMobile ? "inline" : "attachment",
+          data: {
+            avatar: imagePosition("square", imageUrl),
+          }
         };
 
-        const rectRequest = (data, url) => {
-          return axios.post(url, data);
+        const rectRequest = (data, url, headers) => {
+          return axios.post(url, data, {
+            headers: headers
+          });
         };
 
-        const squareRequest = (data, url) => {
-          return axios.post(url, data);
+        const squareRequest = (data, url, headers) => {
+          return axios.post(url, data, {
+            headers: headers
+          });
         };
 
         axios
           .all([
-            rectRequest(rectData, reqUrl),
-            squareRequest(squareData, reqUrl),
+            rectRequest(rectData, reqUrl, headers),
+            squareRequest(squareData, reqUrl, headers),
           ])
           .then((response) => {
+            console.log(response)
             const generatedAvatars = {
-              rect: response[0].data.url,
-              square: response[1].data.url,
+              rect: response[0].data.resultUrl,
+              square: response[1].data.resultUrl,
             };
             setGeneratedAvatars(generatedAvatars);
             setIsGenerating(false);
@@ -197,7 +212,7 @@ function App() {
       };
       generateAvatar();
     }
-  }, [imageUrl]);
+  }, [imageUrl, makeAPIKey, makeTemplateURL, setGeneratedAvatars, setIsGenerating]);
 
   return (
     <Fragment>

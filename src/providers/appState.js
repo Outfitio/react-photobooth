@@ -10,9 +10,14 @@ export function AppStateProvider({ children }) {
   const [generatedAvatar, setGeneratedAvatars] = useState(null);
   const [previewSize, setSize] = useState("square");
 
-  // Enter your UploadPreset and CloudName here to enable uploading to your cloudinary bucket.
+  // Enter your Cloudinary UploadPreset and CloudName here to enable uploading to your cloudinary bucket.
   const cloudinaryUploadPreset = "";
   const cloudinaryCloudName = "";
+
+  // Enter your Make API key and Template URL here
+  const makeAPIKey = "";
+  const makeTemplateURL = "";
+  ;
 
   const value = {
     imageUrl,
@@ -29,6 +34,8 @@ export function AppStateProvider({ children }) {
     setSize,
     cloudinaryUploadPreset,
     cloudinaryCloudName,
+    makeAPIKey,
+    makeTemplateURL,
   };
   return (
     <AppStateContext.Provider value={value}>

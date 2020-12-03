@@ -1,10 +1,6 @@
-# React Photobooth & Avatar Generator
+# Outfit Make - React Photobooth & Avatar Generator
 
-<p align="center">
-  <img width="50%" src="https://media.giphy.com/media/l0HlDwtycArz4uxby/giphy.gif" />
-</p>
-
-A simple boilerplate React application using Cloudinary and Outfit to allow you to create your own virtual photobooths. More to come.
+A simple boilerplate React application using Cloudinary and Outfit Make to allow you to create your own virtual photobooths.
 
 ## Getting Started
 
@@ -52,14 +48,37 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 - [Create React App](https://github.com/facebook/create-react-app) - Simple react app framework
 - [Styled Components](https://styled-components.com/) - Styled with love using CSS-in-JS
-- [Outfit](https://outfit.io/) - Image generation API
+- [Outfit Make](https://make.cm/) - Image generation API
 - [Cloudinary](https://cloudinary.com/) - Client-side image uploading API (see [here](#cloudinary-unsigned-uploading) for more)
-- [EXIFjs](https://github.com/exif-js/exif-js) - Image library to read the output the correct orientation of an image.
 - [Axios](https://github.com/axios/axios) - Handling API requests
 
-## Outfit Image Generation
+## Outfit Make Image Generation
 
-To generate the images we're using Outfit's Create API, which is currently still a work in progress. More to come soon.
+To generate the images we're using Outfit Make. Make allows you create API endpoints out of React templates by importing them into Make.
+
+For documentation on customising your Make request check out the docs [here](https://docs.make.cm/api-reference/make-asset)
+
+### Creating a template
+
+1. Fork this existing Make/React template
+
+2. Customise your template
+
+3. Once finished `yarn build` the application
+
+4. Push the template changes back to Github (including the build directory)
+
+5. In Make, click Import template and follow the steps to import your recently updated template from Github
+
+Now you've got a template endpoint that we can send Make requests to 🚀🚀
+
+### Setting up your request
+
+1. In your imported template's API playground click on the API keys dropdown and select or create an API key
+
+2. From the API playground copy out the request URL (`apiUrl`) and the `X-MAKE-API-KEY`
+
+3. In the `react-photobooth` application go to the `appState.js` file and paste in the request URL and the API key into the corresponding `consts`.
 
 ## Cloudinary Unsigned Uploading
 

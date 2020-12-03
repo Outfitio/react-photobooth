@@ -103,42 +103,24 @@ export default function PhotosUploader({ label }) {
   const getBase64Image = (file, callback) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    var exifOrientation = "";
-
-    EXIF.getData(file, function () {
-      var exifData = EXIF.pretty(this);
-      if (exifData) {
-        // console.log(EXIF.getTag(this, 'Orientation'))
-        exifOrientation = EXIF.getTag(this, "Orientation");
-      } else {
-        // console.log("No EXIF data found in image '" + file.name + "'.")
-      }
-    });
 
     reader.onload = (event) => {
+      let width = "";
+      let height = "";
+
+      const MAX_WIDTH = 1600;
+      const MAX_HEIGHT = 1600;
+
       const img = new Image();
+
+      img.style.imageOrientation = "from-image";
+
       img.src = event.target.result;
 
       img.onload = () => {
-        var width = "";
-        var height = "";
-        var transform = "";
+        width = img.width;
+        height = img.height;
 
-        if (exifOrientation === 8) {
-          width = img.height;
-          height = img.width;
-          transform = "left";
-        } else if (exifOrientation === 6) {
-          width = img.height;
-          height = img.width;
-          transform = "right";
-        } else {
-          width = img.width;
-          height = img.height;
-        }
-
-        var MAX_WIDTH = 1600;
-        var MAX_HEIGHT = 1600;
         if (width / MAX_WIDTH > height / MAX_HEIGHT) {
           if (width > MAX_WIDTH) {
             height *= MAX_WIDTH / width;
@@ -152,27 +134,16 @@ export default function PhotosUploader({ label }) {
         }
 
         const canvas = document.createElement("canvas");
-        var ctx = canvas.getContext("2d");
+        let ctx = canvas.getContext("2d");
 
         canvas.width = width;
         canvas.height = height;
 
-        ctx.fillStyle = "white";
+        canvas.style.imageOrientation = "from-image";
+        ctx.fillStyle = "rgba(255,255,255,0.0)";
         ctx.fillRect(0, 0, 700, 600);
-        if (transform === "left") {
-          ctx.setTransform(0, -1, 1, 0, 0, height);
-          ctx.drawImage(img, 0, 0, height, width);
-        } else if (transform === "right") {
-          ctx.setTransform(0, 1, -1, 0, width, 0);
-          ctx.drawImage(img, 0, 0, height, width);
-        } else if (transform === "flip") {
-          ctx.setTransform(1, 0, 0, -1, 0, height);
-          ctx.drawImage(img, 0, 0, width, height);
-        } else {
-          ctx.setTransform(1, 0, 0, 1, 0, 0);
-          ctx.drawImage(img, 0, 0, width, height);
-        }
         ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.drawImage(img, 0, 0, width, height);
 
         const data = ctx.canvas.toDataURL("image/jpeg");
         callback(data);
